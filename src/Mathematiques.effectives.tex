@@ -1,0 +1,229 @@
+%        File: Mathematiques.effectives.tex
+%     Created: Don Okt 15 06:00  2015 C
+% Last Change: Don Okt 15 06:00  2015 C
+%
+\documentclass[a4paper, 11pt]{report}
+
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{physics}
+
+\input{macros_math}
+\input{include_thm}
+
+\title{Mathématiques effectives}
+\author{Danny Willems}
+\date{Version compilée du \today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter*{Introduction}
+
+Le cours de mathématiques effectives se charge d'étudier la théorie des jeux.
+
+% Définition d'un jeu (avec du vocabulaire français
+% Expliquer notre démarche d'étude
+% Donner la définition d'un jeu à information parfaite et à somme nulle.
+
+\chapter{Jeux combinatoires/qualitatifs à information parfaite et à somme nulle}
+
+\section{Exemples de jeux}
+
+Commençons par donner deux exemples de jeux.
+
+\subsection*{Jeu de Nim 1}
+
+Le jeu de Nim est un jeu qui se joue à deux, chacun à son tour. Il est composé
+de deux tas d'objets. Il y a $n_{1}$ objets dans le tas $1$ et $n_{2}$ objets
+dans le tas $2$. On se retrouve donc avec un couple $(n_{1}, n_{2}) \in
+\naturel^{2}$.
+
+Les règles sont simples: le jeu se joue tour à tour. A chaque tour, le joueur
+courant doit retirer $k$ objets dans un des deux tas. Les $k$ pièces doivent
+être retirées dans un même tas.
+
+Un joueur gagne lorsque celui-ci a retiré le ou les derniers objets, l'autre
+joueur a alors perdu.
+
+\begin{remarque}
+	Le jeu de Nim 1 a pour caractéristiques:
+	\begin{enumerate}
+		\item Il se joue à deux joueurs. Notons les $J_{1}$ et $J_{2}$.
+		\item L'état du jeu est connu en entier par les deux joueurs à chaque
+			coup. Le jeu est donc à information parfaite.
+		\item Le jeu se joue tour à tour.
+		\item $J_{1}$ gangne ssi $J_{2}$ perd.
+		\item Aucun match nul possible.
+	\end{enumerate}
+\end{remarque}
+
+\subsection*{Jeu de Nim 2}
+
+\section{Définitions}
+
+Nous allons tenter de donner une définition de jeu englobant les jeux de Nim
+cités précédemment. On créera ainsi une classe de jeu, et on tentera de retirer
+des théorèmes intéressants. Ces théorèmes pourraient nous donner des conditions
+nécessaires et suffisantes pour gagner à un jeu de cette classe, d'exitence de
+telles conditions, nous la donner, etc. Est-ce possible déjà ?
+
+Pour classer ce jeu, on va utiliser la notion de graphe.
+
+\begin{definition} [Graphe]
+	\textbf{Un graphe} ou \textbf{un espace de graphe} est un couple $(V, E)$ où
+	$V$ est un ensemble et $E \subseteq V \cartprod V$.
+
+	Si $V$ est fini, on parle alors \textbf{de graphe fini} ou encore
+	\textbf{d'espace de graphe fini}. Si $V$ n'est pas fini, on parle
+	\textbf{de graphe infini} ou encore \textbf{d'espace de graphe infini}.
+
+	Les éléments de $V$ sont appelés \textbf{les sommets} et les éléments de $E$
+	sont appelés \textbf{les arcs}.
+\end{definition}
+
+\begin{definition} [Graphe non orienté]
+	Soit $(V, E$) un graphe.
+
+	On dit que $(V, E)$ est \textbf{un graphe orienté} si pour tous sommets
+	$v_{1}, v_{2}$, on a
+	\begin{equation}
+		(v_{1}, v_{2}) \in E \equiv (v_{2}, v_{1}) \in E
+	\end{equation}
+	Si ce n'est pas le cas, on parle de \textbf{graphe non orienté}.
+\end{definition}
+
+\begin{definition} [Jeu combinatoire]
+	\textbf{Un jeu combinatoire} $G$ est un 5-uplet $( (V, E), V_{1}, V_{2},
+	\Omega_{1}, \Omega_{2})$ tel que
+
+	\begin{enumerate}
+		\item $(V, E)$ est un graphe fini.
+		\item $\GSset{V_{1}, V_{2}}$ forment une partition de $V$.
+		\item $\Omega_{1} \subseteq \sequencesIn{V}$ et $\Omega_{2} \subseteq
+			\sequencesIn{V}$.
+		\item Pour tout $v \in V$, il existe $v' \in V$ tel que $(v, v') \in E$.
+	\end{enumerate}
+\end{definition}
+
+Remarquons qu'actuellement, un jeu combinatoire est défini de manière purement
+syntaxique. Il nous reste à donner l'interprétation de ce $5$-uplet.
+
+Dans le jeu de Nim décrit dans l'introduction, on a remarqué que le jeu était
+défini par des états. Ces états seront définis par les sommets du graphe.
+
+Les actions possibles des joueurs seront les arcs de ce graphe. Remarquons que
+l'action 'revenir' en arrière n'est pas toujours possible à cause de
+l'utilisation d'un graphe orienté.
+
+$V_{1}$ (resp. $V_{2}$) représente les états accessibles par le joueur $1$
+(resp. par le joueur $2$). Les états accessibles à partir d'un état $v$ sont
+donnés par les arcs ayant comme point de départ $v$. Comme $V_{1}$ et $V_{2}$
+forment une partition de $V$, on remarque qu'aucun état ne peut être injouable:
+il est toujours possible de jouer.
+
+La dernière condition reflète le fait qu'on peut toujours sortir d'un état.
+Cette notion n'est pas essentiel, mais simplifiera l'écriture des prochaines
+définitions, des propositions s'y rapportant et leurs preuves. Le lecteur est
+invité à omettre cette condition et à retravailler ce chapitre sans cette
+dernière.
+
+Les chemins du graphe $(V, E)$ sont appelés \textbf{les parties de $G$}.
+
+\begin{definition} [Jeu combinatoire à somme nulle]
+	Soit $G = ( (V, E), V_{1}, V_{2}, \Omega_{1}, \Omega_{2})$ un jeu
+	combinatoire.
+
+	On dit que $G$ est \textbf{à somme nulle} si $\Omega_{1} =
+	\comp{\Omega_{2}}$.
+\end{definition}
+
+\begin{definition} [Partie maximale]
+	Soit $G = ( (V, E), V_{1}, V_{2}, \Omega_{1}, \Omega_{2})$ un jeu
+	combinatoire.
+
+	Une partie $P$ de $G$ est dite \textbf{maximale} si celle-ci est infinie, ie
+	si $P \in \sequencesIn{V}$.
+\end{definition}
+
+\begin{definition} [Partie gagnante]
+	Soit $G = ( (V, E), V_{1}, V_{2}, \Omega_{1}, \Omega_{2})$ un jeu
+	combinatoire.
+
+	On dit qu'une partie $P$ maximale est \textbf{gagnante pour $J_{1}$ (resp.
+	pour $J_{2}$)} si $P \in \Omega_{1}$ (resp. $P \in \Omega_{2}$).
+\end{definition}
+
+\begin{definition} [Partie perdante]
+	Soit $G = ( (V, E), V_{1}, V_{2}, \Omega_{1}, \Omega_{2})$ un jeu
+	combinatoire à somme nulle.
+
+	Une partie $P$ maximale est \textbf{perdante pour $J_{2}$ (resp. perdante
+	pour $J_{1}$)} si $P$ est gagnante pour $J_{1}$ (resp. gagnante pour
+	$J_{2}$).
+\end{definition}
+
+Maintenant qu'on a défini les parties d'un jeu, il nous faut définir le terme de
+stratégie.
+
+\begin{definition} [Stratégie]
+	Soit $G = ( (V, E), V_{1}, V_{2}, \Omega_{1}, \Omega_{2})$ un jeu
+	combinatoire.
+
+	\textbf{Une stratégie pour $J_{1}$} est une fonction
+	\begin{equation}
+		\lambda : V^{*}V_{1} \rightarrow V
+	\end{equation}
+	tel que pour tout $(v_{0}, \dots, v_{n}, v_{n + 1}) \in V^{*}V_{1}$, on a
+	\begin{equation}
+		(v_{n}, v_{n + 1}) \in E
+	\end{equation}
+
+	On définit de la même manière 'une stratégie pour $J_{2}$' en remplaçant
+	$V_{1}$ par $V_{2}$.
+\end{definition}
+
+% Interprétation d'une stratégie.
+
+\begin{definition}
+	Soient $G = ( (V, E), V_{1}, V_{2}, \Omega_{1}, \Omega_{2})$ un jeu
+	combinatoire, $P = \GSsequence{v}{i}{I}$ une partie maximale de $G$ et
+	$\lambda_{1}$ une stratégie pour $J_{1}$.
+
+	On dit que \textbf{$P$ est jouée en accord avec $\lambda_{1}$ par $J_{1}$}
+	si pour tout $i \in I$
+	\begin{equation}
+		v_{i} \in V_{1} \implies \lambda_{1}( (v_{0}, \dots, v_{i}) ) = v_{i + 1}
+	\end{equation}
+	En d'autres termes, le joueur $1$ doit jouer exactement les états de la
+	partie $P$.
+
+	On définit de la même manière 'une partie est jouée en accord avec
+	$\lambda_{2}$ par $J_{2}$' en remplaçant $V_{1}$ par $V_{2}$ et $\lambda_{1}$
+	par $\lambda_{2}$.
+\end{definition}
+
+\begin{definition}
+	Soient $G = ( (V, E), V_{1}, V_{2}, \Omega_{1}, \Omega_{2})$ un jeu
+	combinatoire, $\lambda$ une stratégie pour $J_{1}$ et $v \in V$ un
+	état.
+
+	On définit
+	\begin{equation}
+		Outcome(\lambda, v)
+	\end{equation}
+	comme l'ensemble des parties maximales commençant en $v$ jouées en accord
+	avec $\lambda$ par $J_{1}$.
+\end{definition}
+\end{document}
+
+
